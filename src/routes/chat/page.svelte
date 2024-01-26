@@ -24,23 +24,40 @@
         isChatboxOpen = !isChatboxOpen;
     }
 
-    function respondToUser(userMessage) {
-        setTimeout(() => {
-            addBotMessage("This is a response from the chatbot.");
-        }, 500);
+    async function callApiWithPrompt(prompt) {
+        const data2 = await fetch(apiEndpoint, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ prompt: prompt }),
+        });
+        const result = await data2.json();
+        return result.response;
+    }
+
+    async function respondToUser(userMessage) {
+        if (apiEndpoint.trim() === "") {
+            setTimeout(() => {
+                addBotMessage("This is a response from the chatbot.");
+            }, 500);
+        } else {
+            const response = await callApiWithPrompt(userMessage);
+            addBotMessage(response);
+        }
     }
 
     function handleKeydown(event) {
-        if (event.key === 'Enter') {
+        if (event.key === "Enter") {
             sendMessage();
         }
     }
 
-    function sendMessage() {
+    async function sendMessage() {
         if (userInput.trim() !== "") {
             console.log(userInput);
             addUserMessage(userInput);
-            respondToUser(userInput);
+            await respondToUser(userInput);
             userInput = "";
         }
     }
@@ -159,7 +176,7 @@
                     />
                     <button
                         on:click={sendMessage}
-                         on:keydown={handleKeydown}
+                        on:keydown={handleKeydown}
                         id="send-button"
                         class="bg-blue-500 text-white px-4 py-2 rounded-r-md hover:bg-blue-600 transition duration-300"
                         >Send</button
