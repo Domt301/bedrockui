@@ -17,9 +17,12 @@
       updateSpinnerVisibility();
       return;
     }
+    // trim the url value
+    const trimmedUrlValue = urlValue.trim();
+
 
     try {
-      const response = await fetch(urlValue, {
+      const response = await fetch(trimmedUrlValue, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

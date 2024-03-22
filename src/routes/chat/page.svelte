@@ -22,7 +22,9 @@
     }
 
     async function callApiWithPrompt(prompt) {
-        const data2 = await fetch(apiEndpoint, {
+        // trim the api endpoint value
+        const trimmedApiEndpoint = apiEndpoint.trim();
+        const data2 = await fetch(trimmedApiEndpoint, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
